@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "dependencies": {
+    "@spectrum-web-components/bundle": "^0.24.9",
     "lit": "^2.2.0"
   },
   "devDependencies": {

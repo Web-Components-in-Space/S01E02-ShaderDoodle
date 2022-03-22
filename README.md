@@ -1,6 +1,31 @@
 # S01E02-ShaderDoodle
 Episode #2 Shader Doodle!
 
+# Step 2: Add the UI
+It's time to add our UI. We'll be adding (mostly) non-functional UI as a first step of building our
+application. We will NOT be paying attention to organization, so we'll be overloading our one single component
+with all of our markup. For a real application this would be less than ideal - it's better to split things
+up more granularly as smaller and less complicated components, but thats not what we'll be focusing on today,
+so I'm allowing this project to get a bit messy.
+
+We start by adding Spectrum Web Components to our package.json. For Episode 2, I'm using dark mode in Spectrum 
+just because in Episode 1 we used light mode.
+
+The application will be divided into two sections on the left and right. On the left,
+there will be a canvas area where editable text overlays the `shader-doodle` component.
+Below that there will be some controls for setting the text color and recording a GIF
+of the canvas.
+
+On the right, we have some dropdowns to allow us to load different sample shaders, and different textures (if applicable).
+Also, one nuance of `shader-doodle` is additional configuration to run "ShaderToy" shaders, so there is a switch
+to turn that off and on.
+
+Below that is an accordion menu that will contain text editing capabilities for the vertex and fragment shaders
+for the shader set. And lastly, a simple button to reload/refresh the shader after a user has made edits.
+
+But of course, none of this is wired up!
+
+
 # Step 1: Project Setup
 We start our "Space Doodle" app with a bit of front-end tooling setup. For this project, we'll 
 be using Typescript and delve into using some web-dev server plugins.
