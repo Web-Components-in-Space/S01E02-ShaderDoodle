@@ -4,7 +4,11 @@
   "type": "module",
   "dependencies": {
     "@spectrum-web-components/bundle": "^0.24.9",
-    "lit": "^2.2.0"
+    "gifjs": "https://github.com/jnordberg/gif.js.git",
+    "lit": "^2.2.0",
+    "lit-code": "^0.1.10",
+    "prismjs": "^1.27.0",
+    "shader-doodle": "^1.0.0-alpha.20"
   },
   "devDependencies": {
     "@web/dev-server": "^0.1.30",

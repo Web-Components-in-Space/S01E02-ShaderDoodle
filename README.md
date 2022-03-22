@@ -1,6 +1,24 @@
 # S01E02-ShaderDoodle
 Episode #2 Shader Doodle!
 
+# Step 3: Add Shader Doodle (and code editor)
+Now it's time to pop in our remaining components. Of COURSE we need Shader Doodle but, we'll need a code
+editor as well. I found something called `lit-code` which is a PrismJS + Lit based code editor.
+
+We'll add those packages to our package.json. Note that for Shader Doodle we're pulling the experimental alpha.
+We should also import PrismJS so it's default languages like JS can have some nice syntax coloring in `lit-code`.
+It might make more sense to set the language to HLSL (shader language), but it's a bit of a hassle to get
+working, and I've found that it looks virtually identical to JS in practice (at least as far as the color styling goes).
+
+Starting slowly by experimenting and adding shaders manually to our Shader Doodle HTML markup, we'll get a bit more 
+organized and use the separate `shaders.ts` file to hold and export a set of sample shaders. We'll do the same with
+the `lit-code` component. As a middle step, however, we'll store the entire shader script tag in a variable and use
+Lit's `unsafeHTML` to render it, just to show this particular escape hatch exists when we need it.
+
+Lastly, we can add some dark style CSS vars to our 'lit-code' element to match the dark mode we already have for
+the overall web app with Spectrum Web Component.
+
+
 # Step 2: Add the UI
 It's time to add our UI. We'll be adding (mostly) non-functional UI as a first step of building our
 application. We will NOT be paying attention to organization, so we'll be overloading our one single component

@@ -1,6 +1,11 @@
 import { LitElement, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
+import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import style from './doodle.css';
+import 'prismjs';
+import 'shader-doodle';
+import 'lit-code';
+import { GRADIENT } from "./shaders";
 
 import '@spectrum-web-components/theme/sp-theme';
 import '@spectrum-web-components/theme/theme-dark';
@@ -26,8 +31,14 @@ export class Doodle extends LitElement {
         return html`
             <sp-theme scale="medium" color="dark">
                 <div class="main-column left">
-                    <div id="canvas" style="background: linear-gradient(0deg, rgba(34,193,195,1) 0%, rgba(253,187,45,1) 100%)">
-                        <div id="shader-doodle-container"></div>
+                    <div id="canvas">
+                        <div id="shader-doodle-container">
+                            <shader-doodle>
+                                <script type="x-shader/x-fragment">
+                                    ${GRADIENT.fragment}
+                                </script>
+                            </shader-doodle>
+                        </div>
                         <div id="textEditor" contenteditable>Some text</div>
                     </div>
                     <div id="record-settings">
@@ -92,8 +103,10 @@ export class Doodle extends LitElement {
                     <div id="accordion-container">
                         <sp-accordion allow-multiple>
                             <sp-accordion-item open label="Fragment Shader">
+                                <lit-code id="fragment" language="js" linenumbers code=${GRADIENT.fragment}></lit-code>
                             </sp-accordion-item>
                             <sp-accordion-item label="Vertex Shader">
+                                <lit-code id="vertex" language="js" linenumbers code=${GRADIENT.vertex}></lit-code>
                             </sp-accordion-item>
                         </sp-accordion>
                     </div>
