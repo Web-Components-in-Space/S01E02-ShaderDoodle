@@ -61,24 +61,12 @@ export class Doodle extends LitElement {
                     <div id="shader-control-header">
                         <div>
                             <sp-field-label>Sample shaders</sp-field-label>
-                            <sp-picker label="Custom"></sp-picker>
+                            <sp-picker></sp-picker>
                         </div>
     
                         <div>
                             <sp-field-label>Sample textures</sp-field-label>
-                            <sp-picker>
-                                <sp-menu-item value="No texture">No Texture</sp-menu-item>
-                                ${[
-                                    'My Webcam',
-                                    'challenger.jpg',
-                                    'christopher_kraft.jpg',
-                                    'jupiterspot.jpg',
-                                    'reddwarf.jpg',
-                                    'some video.mp4',    
-                                ].map(photo => {
-                                    return html`<sp-menu-item value=${photo}>${photo}</sp-menu-item>`
-                                })};
-                            </sp-picker>
+                            <sp-picker></sp-picker>
                         </div>
                         <div>
                             <sp-field-label>ShaderToy style?</sp-field-label>
