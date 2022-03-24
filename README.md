@@ -1,6 +1,55 @@
 # S01E02-ShaderDoodle
 Episode #2 Shader Doodle!
 
+# Step 4: Wire up the UI
+The code editors and Shader Doodle will be a bit more difficult to hook up, but we can at least get
+the easy stuff out of the way.
+
+Starting with the color picker, we'll add a `@property` decorator. This is a reactive property, and is something
+we explored in Episode #1. This time however, we can use a simple decorator instead of the wordy syntax in a 
+pure JS project.
+
+By hooking up the input event to the color picker, setting the current `color` attribute on each to this new `textColor`
+property, the color slider and area are now affected by user input. To finish up, we can add this CSS property as an
+inline style on the editable text element.
+
+We can do similar with the actual editable text content. For our purposes, however, a reactive property isn't needed
+here. The only place this editable text will appear is here on this `div`. And then in a later step, we'll use this
+text to render a GIF of our shader + text overlay. We just need to update this `text` property when our field updates.
+
+So after creating the property (non-reactive), we'll add an input event on this `contenteditable` `div` to simply
+keep the property updated as the user edits it.
+
+Also easy, we can wire up our sliders that control how many frames we'd like to record for our GIF and time between snapshots.
+For this, however, we won't use the `@property` decorator for these properties. Instead, lets use the more appropriate `@state`
+decorator. This is new in Lit 2 and meant for internal properties that we don't care to expose outside of the component.
+Incidentally, it would have been more correct to use them for the colors and text. These reactive properties will now update
+the label below the sliders to indicate what the timing of the recording will be.
+
+To finish up this left side, let's just fire off an alert as a placeholder for the function to record our GIF. So we'll
+create this placeholder function that uses the `@click` listener on the "Record and Save GIF" button.
+
+Lastly, we'll get the pickers/comboboxes working on the right side. These control the "shader" and optional
+texture used for the shader. The menu items for the shader picker will be driven from the list of shaders found in `shaders.ts` 
+while the textures will just be an array of images in our assets folder with the addition of a web cam and the option
+to not have a texture at all. 
+
+Given that Shader Doodle is a bit abnormal of a component (I'll discuss why in the next step), we won't actually take action
+on loading the shader quite yet.
+
+But wait! Even after we've wired this up, the picker menu is having some issues displaying when clicking to open it up.
+We're back to the issue in Episode #1, where we get a `process not defined` error. Again, this is due to an overlay
+management library trying to query if we're using Node.js or in a browser. We fixed this with a hack before, but now lets
+fix it properly. 
+
+In our `web-dev-server.config.js`, we'll remove `true` from the `nodeResolve` object. This object is much like the `lit-css`
+plugin we're using, but `nodeResolve` is so important and central to how `@web/dev-server` works, it's a top level
+configuration option. Typically, you'll just want it turned on, so `true` is what you'd set this to. However, to give
+it more of a configuration, we can set this to an object. We'll do that, and use the `exportConditions` property to set this
+in production mode. Doing this injects the `process` object and allows the internal 3rd party library to know
+that what we're doing is inside the browser.
+
+
 # Step 3: Add Shader Doodle (and code editor)
 Now it's time to pop in our remaining components. Of COURSE we need Shader Doodle but, we'll need a code
 editor as well. I found something called `lit-code` which is a PrismJS + Lit based code editor.

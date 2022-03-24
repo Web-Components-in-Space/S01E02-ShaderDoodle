@@ -8,7 +8,9 @@ export default {
         '**/*.css': 'js'
     },
     open: true,
-    nodeResolve: true,
+    nodeResolve: {
+        exportConditions: ['production']
+    },
     plugins: [
         pluginLitCSS()
     ]
