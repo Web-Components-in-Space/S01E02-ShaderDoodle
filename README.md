@@ -1,6 +1,38 @@
 # S01E02-ShaderDoodle
 Episode #2 Shader Doodle!
 
+# Step 5: Editing the Shader
+So here's the thing with Shader Doodle. It's pretty awesome, but doesn't seem designed to keep switching
+shaders on the same component instance. It seems designed to be setup once in code and then run. Our SpaceDoodle
+app probably falls outside the normal usecase!
+
+That's OK, we can work with this! Lit is designed to make minimal changes and not tear things down. This 
+means that when an attribute or your component's slot changes, that's all that's going to change.
+Your component as a DOM element will not get torn down and re-rendered. Your constructor won't get called again
+and it won't get removed and re-added to the DOM.
+
+But in this case, this is actually the behavior we want! At least for this tiny section of our UI. We want to
+remove Shader Doodle from the DOM so that it gets torn down, and then add it back with a new shader such that
+it gets a fresh start. To do this, we'll fall back to the very behavior we use Lit to escape from: appending directly
+to the DOM.
+
+So, we're going to manually add Shader Doodle to `<div id="shader-doodle-container"></div>`. To do this, in our `shaders.ts`
+file we'll be adding a `createShaderHTML` function which constructs a tag containing the correct vertex and fragment
+script tags, as well as the appropriate texture custom element for the shader. But, we're going admittedly low-tech here.
+We're creating this tag through string concatenation and then with the `shaderUpdate` method, we set the `innerHTML`
+of the Shader Doodle container to this string. But just prior tohat we set the `innerHTML` to an empty string.
+This effectively removes the element from the DOM, and forces it to recreate itself in its entirety with the new
+HTML string.
+
+In this same `shaderUpdate` method, we'll update the code editors as well by using the `setCode` method of these `lit-code` 
+components. We'll also want the code editor components to update the shader. To do this we'll want to listen for the `lit-code`
+`@update` event. We'll create a brand new custom shader object with the new code by cloning the current shader object.
+
+Of course to update all of these elements, we need references to them. And for this, we can use the `query` decorator.
+
+Lastly we'll use Lit's `firstUpdated` method to call this new `shaderUpdate` method against the first shader
+in the shader list.
+
 # Step 4: Wire up the UI
 The code editors and Shader Doodle will be a bit more difficult to hook up, but we can at least get
 the easy stuff out of the way.

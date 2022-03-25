@@ -7,6 +7,27 @@ interface Shader {
     texture?: string
 }
 
+export const createShaderHTML = (shader: Shader) => {
+    let tag = '<shader-doodle';
+    if (shader.isShaderToy) {
+        tag += ' shaderToy'
+    }
+    tag += '>';
+
+    if (shader.texture === 'My Webcam') {
+        tag += '<sd-texture webcam></sd-texture>'
+    } else if (shader.texture) {
+        tag += `<sd-texture src="./assets/${shader.texture}"></sd-texture>`;
+    }
+
+    tag += `<script type="x-shader/x-fragment">${shader.fragment}</script>`;
+    tag += `<script type="x-shader/x-vertex">${shader.vertex}</script>`;
+    tag += '</shader-doodle>';
+    return tag;
+}
+
+
+
 export const DEFAULT_VERTEX = `attribute vec2 position;
 void main() {
   gl_Position = vec4(position, 0.0, 1.0);

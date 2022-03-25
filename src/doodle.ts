@@ -1,11 +1,10 @@
-import { LitElement, html } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
-import {unsafeHTML} from 'lit/directives/unsafe-html.js';
+import {LitElement, html, PropertyValues} from 'lit';
+import { customElement, property, query, state } from 'lit/decorators.js';
 import style from './doodle.css';
 import 'prismjs';
 import 'shader-doodle';
 import 'lit-code';
-import { GRADIENT, shaders } from "./shaders";
+import { shaders, createShaderHTML } from "./shaders";
 
 import '@spectrum-web-components/theme/sp-theme';
 import '@spectrum-web-components/theme/theme-dark';
@@ -27,6 +26,18 @@ import '@spectrum-web-components/color-slider/sp-color-slider';
 export class Doodle extends LitElement {
     static get styles() { return [style]; }
 
+    @query('#fragment')
+    protected fragmentCodeEditorEl;
+
+    @query('#vertex')
+    protected vertexCodeEditorEl;
+
+    @query('#shader-doodle-container')
+    protected shaderDoodleContainerEl;
+
+    @query('shader-doodle')
+    protected shaderDoodleEl;
+
     @property({ type: String })
     protected textColor: string = '#000000';
 
@@ -46,6 +57,18 @@ export class Doodle extends LitElement {
     @state()
     protected currentShader = shaders[0];
 
+    protected firstUpdated(_changedProperties: PropertyValues) {
+        super.firstUpdated(_changedProperties);
+        this.shaderUpdate(this.currentShader);
+    }
+
+    protected shaderUpdate(shader) {
+        this.fragmentCodeEditorEl?.setCode(shader.fragment);
+        this.vertexCodeEditorEl?.setCode(shader.vertex);
+        this.shaderDoodleContainerEl.innerHTML = '';
+        this.shaderDoodleContainerEl.innerHTML = createShaderHTML(shader);
+    }
+
     protected recordGIF() {
         alert('Record GIF')
     }
@@ -55,14 +78,8 @@ export class Doodle extends LitElement {
             <sp-theme scale="medium" color="dark">
                 <div class="main-column left">
                     <div id="canvas">
-                        <div id="shader-doodle-container">
-                            <shader-doodle>
-                                <script type="x-shader/x-fragment">
-                                    ${GRADIENT.fragment}
-                                </script>
-                            </shader-doodle>
-                        </div>
-                        <div id="textEditor" style="color: ${this.textColor}" contenteditable @input=${(event) => { this.text = event.target.innerText; }}>${this.text}</div>
+                        <div id="shader-doodle-container"></div>
+                        <div id="textEditor" style="color: ${this.textColor}; pointer-events: none" contenteditable @input=${(event) => { this.text = event.target.innerText; }}>${this.text}</div>
                     </div>
                     <div id="record-settings">
                         <div class="text-color">
@@ -101,6 +118,7 @@ export class Doodle extends LitElement {
                             <sp-field-label>Sample shaders</sp-field-label>
                             <sp-picker value=${this.currentShader.id} label="Custom" @change=${(event) => {
                                 this.currentShader = shaders.find((shader) => event.target.value == shader.id);
+                                this.shaderUpdate(this.currentShader);
                             }}>
                                 ${shaders.map((shader) => {
                                     return html`<sp-menu-item value=${shader.id}>${shader.name}</sp-menu-item>`
@@ -113,6 +131,7 @@ export class Doodle extends LitElement {
                             <sp-picker value=${this.currentShader.texture || 'No texture'} @change=${(event) => {
                                 this.currentShader = Object.assign({}, this.currentShader);
                                 this.currentShader.texture = event.target.value;
+                                this.shaderUpdate(this.currentShader);
                             }}>
                                 <sp-menu-item value="No texture">No Texture</sp-menu-item>
                                 ${[
@@ -129,7 +148,11 @@ export class Doodle extends LitElement {
                         </div>
                         <div>
                             <sp-field-label>ShaderToy style?</sp-field-label>
-                            <sp-switch></sp-switch>
+                            <sp-switch @change=${(event) => {
+                                this.currentShader = Object.assign({}, this.currentShader);
+                                this.currentShader.isShaderToy = event.target.checked;
+                                this.shaderUpdate(this.currentShader);
+                            }} ?checked=${this.currentShader.isShaderToy}></sp-switch>
                         </div>
                     </div>
 
@@ -137,17 +160,38 @@ export class Doodle extends LitElement {
                     
                     <sp-field-label>Shader editors</sp-field-label>
                     <div id="accordion-container">
-                        <sp-accordion allow-multiple>
-                            <sp-accordion-item open label="Fragment Shader">
-                                <lit-code id="fragment" language="js" linenumbers code=${GRADIENT.fragment}></lit-code>
-                            </sp-accordion-item>
-                            <sp-accordion-item label="Vertex Shader">
-                                <lit-code id="vertex" language="js" linenumbers code=${GRADIENT.vertex}></lit-code>
-                            </sp-accordion-item>
-                        </sp-accordion>
-                    </div>
+                    <sp-accordion allow-multiple>
+                        <sp-accordion-item open label="Fragment Shader">
+                            <lit-code id="fragment" language="js" linenumbers @update=${
+                                    ({detail: code}) => {
+                                        if (code !== this.currentShader.fragment) {
+                                            // Make a copy of the current shader
+                                            this.currentShader = Object.assign({}, this.currentShader);
+                                            this.currentShader.name = 'Custom';
+                                            this.currentShader.id = -1;
+                                            this.currentShader.fragment = code;
+                                        }
+                                    }
+                            }></lit-code>
+                        </sp-accordion-item>
+                        <sp-accordion-item label="Vertex Shader">
+                            <lit-code id="vertex" language="js" linenumbers @update=${
+                                    ({detail: code}) => {
+                                        if (code !== this.currentShader.vertex) {
+                                            // Make a copy of the current shader
+                                            this.currentShader = Object.assign({}, this.currentShader);
+                                            this.currentShader.name = 'Custom';
+                                            this.currentShader.id = -1;
+                                            this.currentShader.vertex = code;
+                                        }
+                                    }
+                            }></lit-code>
+                        </sp-accordion-item>
+                    </sp-accordion>
                     <div id="shader-control-footer">
-                        <sp-button>Reload my shader</sp-button>
+                        <sp-button @click=${() => {
+                            this.shaderUpdate(this.currentShader);
+                        }}>Reload my shader</sp-button>
                     </div>
                 </div>
             </sp-theme>`;
