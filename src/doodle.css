@@ -82,6 +82,7 @@ sp-color-area {
 
 #record-settings * {
     margin-top: 15px;
+    flex: 1;
 }
 
 .main-column {

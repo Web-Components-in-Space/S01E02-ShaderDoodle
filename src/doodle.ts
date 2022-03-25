@@ -63,10 +63,9 @@ export class Doodle extends LitElement {
                                 max="2000"
                             ></sp-slider>
                             <sp-field-label>Will record x frames at a rate of x per second</sp-field-label>
+                            <sp-button>Record and Save GIF</sp-button>
                         </div>
                     </div>
-
-                    <sp-button>Record and Save GIF</sp-button>
                 </div>
                 <div class="main-column right">
                     <div id="shader-control-header">
