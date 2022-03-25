@@ -1,6 +1,5 @@
 import {LitElement, html, PropertyValues} from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
-import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import style from './doodle.css';
 import 'prismjs';
 import 'shader-doodle';
@@ -23,6 +22,7 @@ import '@spectrum-web-components/slider/sp-slider';
 import '@spectrum-web-components/progress-bar/sp-progress-bar';
 import '@spectrum-web-components/color-area/sp-color-area';
 import '@spectrum-web-components/color-slider/sp-color-slider';
+
 
 @customElement('doodle-app')
 export class Doodle extends LitElement {
@@ -121,7 +121,8 @@ export class Doodle extends LitElement {
                         </div>
                         <div>
                             <sp-slider
-                                value=${this.framesToRecord}    
+                                value=${this.framesToRecord}
+                                @input=${(event) => { this.framesToRecord = event.target.value }}
                                 label="Number of frames"
                                 variant="tick"
                                 min="1"
@@ -131,16 +132,17 @@ export class Doodle extends LitElement {
                             <sp-slider
                                 label="Milliseconds between frames"
                                 value=${this.millisecondsBetweenFrames}
+                                @input=${(event) => { this.millisecondsBetweenFrames = event.target.value }}
                                 variant="tick"
                                 tick-step="100"
                                 min="100"
                                 max="2000"
                             ></sp-slider>
                             <sp-field-label>Will record ${this.framesToRecord} frames at a rate of ${this.millisecondsBetweenFrames/1000} per second</sp-field-label>
+                            <sp-button @click=${() => this.recordGIF()}>Record and Save GIF</sp-button>
                         </div>
                     </div>
-
-                    <sp-button @click=${() => this.recordGIF()}>Record and Save GIF</sp-button>
+                    
                     <sp-progress-bar
                             id="recording-progress"
                             size="m"
