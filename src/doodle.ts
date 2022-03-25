@@ -4,6 +4,7 @@ import style from './doodle.css';
 import 'prismjs';
 import 'shader-doodle';
 import 'lit-code';
+import GIFEncoder from 'gifjs/src/GIFEncoder.js';
 import { shaders, createShaderHTML } from "./shaders";
 
 import '@spectrum-web-components/theme/sp-theme';
@@ -18,6 +19,7 @@ import '@spectrum-web-components/field-label/sp-field-label';
 import '@spectrum-web-components/divider/sp-divider';
 import '@spectrum-web-components/switch/sp-switch';
 import '@spectrum-web-components/slider/sp-slider';
+import '@spectrum-web-components/progress-bar/sp-progress-bar';
 import '@spectrum-web-components/color-area/sp-color-area';
 import '@spectrum-web-components/color-slider/sp-color-slider';
 
@@ -43,11 +45,17 @@ export class Doodle extends LitElement {
 
     protected text: string = 'Shader Doodle!';
 
+    @property({ type: Boolean, reflect: true })
+    protected recording: boolean = false;
+
     @state()
     protected framesToRecord: number = 10;
 
     @state()
     protected millisecondsBetweenFrames: number = 500;
+
+    @state()
+    protected frameRecording: number = 0;
 
     /**
      * normally, an object wouldn't be a good idea here for "currentShader",
@@ -70,7 +78,31 @@ export class Doodle extends LitElement {
     }
 
     protected recordGIF() {
-        alert('Record GIF')
+        const gl = this.shaderDoodleEl.canvas.getContext('2d');
+        const encoder = new GIFEncoder(this.shaderDoodleEl.canvas.width, this.shaderDoodleEl.canvas.height);
+        encoder.setRepeat(0);
+        encoder.writeHeader();
+
+        this.frameRecording = 0;
+        this.recording = true;
+        const timer = setInterval(() => {
+            this.frameRecording ++;
+            gl.font = 'bolder 50px sans-serif';
+            gl.fillStyle = this.textColor;
+            gl.fillText(this.text, 0, 50, this.shaderDoodleEl.canvas.width);
+            encoder.addFrame(gl.getImageData(0, 0, gl.canvas.width, gl.canvas.height).data);
+            if (this.frameRecording >= this.framesToRecord) {
+                this.onRecordingFinished(encoder);
+                clearTimeout(timer);
+            }
+        }, this.millisecondsBetweenFrames);
+    }
+
+    onRecordingFinished(encoder) {
+        encoder.finish();
+        this.recording = false;
+        const blob = new Blob([...encoder.out.pages], { type: "image/gif" });
+        window.open(URL.createObjectURL(blob));
     }
 
     render() {
@@ -107,10 +139,16 @@ export class Doodle extends LitElement {
                                 max="2000"
                             ></sp-slider>
                             <sp-field-label>Will record ${this.framesToRecord} frames at a rate of ${this.millisecondsBetweenFrames/1000} per second</sp-field-label>
+                            <sp-button @click=${() => this.recordGIF()}>Record and Save GIF</sp-button>
                         </div>
                     </div>
-
-                    <sp-button @click=${() => this.recordGIF()}>Record and Save GIF</sp-button>
+                    
+                    <sp-progress-bar
+                            id="recording-progress"
+                            size="m"
+                            label="Recording your GIF"
+                            progress=${(this.frameRecording / this.framesToRecord) * 100}
+                    ></sp-progress-bar>
                 </div>
                 <div class="main-column right">
                     <div id="shader-control-header">

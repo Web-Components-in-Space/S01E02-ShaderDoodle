@@ -1,6 +1,47 @@
 # S01E02-ShaderDoodle
 Episode #2 Shader Doodle!
 
+# Step 6: Rendering the GIF
+Let's finally render a GIF from Shader Doodle. There are some technical challenges here, but first, lets
+start with the UI.
+
+We're going to add another reactive property called `recording`. Even though it will be used internally
+in practice and can be decorated as `@state`, we're going to fall back to `@property`. The reason is that
+we'd like to hide our recording settings when recording, but also show a progress bar when we do.
+
+So, first, we'll import the Spectrum Web Components `sp-progress-bar` and add it to our component markup.
+A `@state` decorated reactive property called `frameRecording` will also be added to our class. This property
+will indicate which frame we are currently recording, and we'll use `frameRecording` vs `framesToRecord` to calculate
+progress.
+
+Because recording happens for a limited time, and so will this state of our UI, we can set this new `recording` property
+to true or false manually to show either state. We also set it up to reflect so we can use the attribute in 
+our dev tools to flip this property on or off and test the transition of the UI back and forth before we actually wire
+up the record function.
+
+The outcome here is that we'll be adding some CSS rules to show or hide elements depending on this `recording` property value.
+
+And now the fun part, getting our GIF recorder to work. This is going to be a bit tricky, but we can show off some
+more `@web/dev-server` plugins. Which, again, are actually Rollup plugins - so we have a huge library to choose from.
+
+As we install and import `GIF.js`, we quickly see that it won't work as is. First off, it's a Coffeescript based library, which even
+the bundled version doesn't quite work as an import. So we'll reach into it's source folder, skip the Coffeescript and go straight
+to the JS files that originated as a Flash/Actionscript 3 library and was converted to JS over time.
+
+Unfortunately even THESE JS files use CommonJS which don't work as an ES Import. So we'll fix this problem by installing
+and using a Rollup CommonJS plugin. This plugin will transform the `require` calls to be compatible with ES modules and allow us
+to use the library.
+
+After this gets added to `@web/dev-server`, we find that there is an additional problem. Our browser starts erroring out because
+some variables aren't defined before use. This problem is the result of this older library not conforming to strict-mode JS.
+ES module imports actually do enforce strict mode, so there's no way around this problem.....or is there?
+
+We can use the Rollup Prepend plugin to insert Javascript code into this one problematic file as its served. We'll simply insert some 
+variable declarations at the beginning.
+
+And with that, we can import our GIF encoder and set up the function and timer to capture frames, saving them 
+as a GIF at the end of the recording period.
+
 # Step 5: Editing the Shader
 So here's the thing with Shader Doodle. It's pretty awesome, but doesn't seem designed to keep switching
 shaders on the same component instance. It seems designed to be setup once in code and then run. Our SpaceDoodle

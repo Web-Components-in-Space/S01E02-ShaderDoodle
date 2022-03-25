@@ -82,6 +82,11 @@ sp-color-area {
 
 #record-settings * {
     margin-top: 15px;
+    flex: 1;
+}
+
+#recording-progress {
+    display: none;
 }
 
 .main-column {
@@ -99,4 +104,16 @@ sp-color-area {
 .main-column.right {
     background-color: var(--spectrum-global-color-gray-500);
     overflow-y: auto;
+}
+
+:host([recording]) .main-column.right * {
+    display: none;
+}
+
+:host([recording]) #record-settings {
+    display: none;
+}
+
+:host([recording]) #recording-progress {
+    display: block;
 }
