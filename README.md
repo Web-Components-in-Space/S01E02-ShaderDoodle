@@ -1,6 +1,24 @@
 # S01E02-ShaderDoodle
 Episode #2 Shader Doodle!
 
+# Step 7: Bundle and Build with Rollup
+In Episode #1, we never really finished our project to package it up for deployment somewhere. Rollup
+is a great choice for us, especially because we're already using Rollup in `@web/dev-server` for node module
+resolution and our various plugins.
+
+So, in this last step, we'll install Rollup and create a build task in our `package.json`.
+
+We'll start by `npm install`-ing a few packages. First, Rollup, and then some more plugins like `@rollup/plugin-node-resolve`
+to do the same module resolving work as our server, `@web/rollup-plugin-html` to manage our HTML page and linked script, as well as 
+`rollup-plugin-sourcemaps` and `rollup-plugin-clean` to include sourcemaps and clean our build folder before builds.
+
+Once installed, we can create a Rollup config file and set it up in much the same way, using largely the same plugins
+and options as our `web-dev-server.config.js`.
+
+Lastly is adding our build task and running it. We can now run our bundled file with associate HTML file right in
+a browser on any server, ready to be put online!
+ 
+
 # Step 6: Rendering the GIF
 Let's finally render a GIF from Shader Doodle. There are some technical challenges here, but first, lets
 start with the UI.
