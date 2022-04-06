@@ -10,7 +10,7 @@ To begin, we start with installing 3 packages
 - @web-dev/server - Also used in Episode 1 and we'll be using it again to serve our dev environment
 - Typescript - Adds types to our JS variables and functions, but also is one way to use decorators in Lit
 
-Next, we'll set up some tasks in our package.json. New to use will be the Typescript compilation task, and
+Next, we'll set up some tasks in our package.json. New to us will be the Typescript compilation task, and
 the task to transpile and watch our TS files. The serve task that launches our page for development has 
 been covered in Episode 1 and adds TS transpilation to the mix. TS and serving are done with an ampersand
 (&) so they both execute in parallel. TS files will be watched and when changes happen will be transpiled to JS.
