@@ -27,7 +27,7 @@ But of course, none of this is wired up!
 
 
 # Step 1: Project Setup
-We start our "Space Doodle" app with a bit of front-end tooling setup. For this project, we'll 
+We start our "Space Doodle" app with a bit of front-end tooling setup. For this project, we'll
 be using Typescript and delve into using some web-dev server plugins.
 
 To begin, we start with installing 3 packages
@@ -35,8 +35,8 @@ To begin, we start with installing 3 packages
 - @web-dev/server - Also used in Episode 1 and we'll be using it again to serve our dev environment
 - Typescript - Adds types to our JS variables and functions, but also is one way to use decorators in Lit
 
-Next, we'll set up some tasks in our package.json. New to use will be the Typescript compilation task, and
-the task to transpile and watch our TS files. The serve task that launches our page for development has 
+Next, we'll set up some tasks in our package.json. New to us will be the Typescript compilation task, and
+the task to transpile and watch our TS files. The serve task that launches our page for development has
 been covered in Episode 1 and adds TS transpilation to the mix. TS and serving are done with an ampersand
 (&) so they both execute in parallel. TS files will be watched and when changes happen will be transpiled to JS.
 And these JS files that were transpiled will force the page to be reloaded. We'll also need a simple `tsconfig.json`
@@ -49,10 +49,10 @@ We'll also add the `doodle-app` component/tag/element to our page body, and incl
 "Space Doodle" app entry point found at `src/doodle.js`
 
 In our application entrypoint, doodle.ts (which is Typescript), we'll create a mostly empty class. This class
-will be our `doodle-app` web component which uses Lit by extending it. Inside this class will be the 
+will be our `doodle-app` web component which uses Lit by extending it. Inside this class will be the
 Lit `render` call which renders nothing yet (by way of an empty html tagged template).
 
-To define the Web Component, we'll be using our first "decorator". 
+To define the Web Component, we'll be using our first "decorator".
 
 Next up, we'll demonstrate adding style to our component. Unlike Episode 1, we won't be using CSS in JS,
 or rather we won't LOOK like we are. We'll start by creating a `doodle.css` file and adding a simple `:host`
