@@ -17,7 +17,7 @@ and options as our `web-dev-server.config.js`.
 
 Lastly is adding our build task and running it. We can now run our bundled file with associate HTML file right in
 a browser on any server, ready to be put online!
- 
+
 
 # Step 6: Rendering the GIF
 Let's finally render a GIF from Shader Doodle. There are some technical challenges here, but first, lets
@@ -33,7 +33,7 @@ will indicate which frame we are currently recording, and we'll use `frameRecord
 progress.
 
 Because recording happens for a limited time, and so will this state of our UI, we can set this new `recording` property
-to true or false manually to show either state. We also set it up to reflect so we can use the attribute in 
+to true or false manually to show either state. We also set it up to reflect so we can use the attribute in
 our dev tools to flip this property on or off and test the transition of the UI back and forth before we actually wire
 up the record function.
 
@@ -54,10 +54,10 @@ After this gets added to `@web/dev-server`, we find that there is an additional 
 some variables aren't defined before use. This problem is the result of this older library not conforming to strict-mode JS.
 ES module imports actually do enforce strict mode, so there's no way around this problem.....or is there?
 
-We can use the Rollup Prepend plugin to insert Javascript code into this one problematic file as its served. We'll simply insert some 
+We can use the Rollup Prepend plugin to insert Javascript code into this one problematic file as its served. We'll simply insert some
 variable declarations at the beginning.
 
-And with that, we can import our GIF encoder and set up the function and timer to capture frames, saving them 
+And with that, we can import our GIF encoder and set up the function and timer to capture frames, saving them
 as a GIF at the end of the recording period.
 
 # Step 5: Editing the Shader
@@ -65,7 +65,7 @@ So here's the thing with Shader Doodle. It's pretty awesome, but doesn't seem de
 shaders on the same component instance. It seems designed to be setup once in code and then run. Our SpaceDoodle
 app probably falls outside the normal usecase!
 
-That's OK, we can work with this! Lit is designed to make minimal changes and not tear things down. This 
+That's OK, we can work with this! Lit is designed to make minimal changes and not tear things down. This
 means that when an attribute or your component's slot changes, that's all that's going to change.
 Your component as a DOM element will not get torn down and re-rendered. Your constructor won't get called again
 and it won't get removed and re-added to the DOM.
@@ -83,7 +83,7 @@ of the Shader Doodle container to this string. But just prior tohat we set the `
 This effectively removes the element from the DOM, and forces it to recreate itself in its entirety with the new
 HTML string.
 
-In this same `shaderUpdate` method, we'll update the code editors as well by using the `setCode` method of these `lit-code` 
+In this same `shaderUpdate` method, we'll update the code editors as well by using the `setCode` method of these `lit-code`
 components. We'll also want the code editor components to update the shader. To do this we'll want to listen for the `lit-code`
 `@update` event. We'll create a brand new custom shader object with the new code by cloning the current shader object.
 
@@ -97,7 +97,7 @@ The code editors and Shader Doodle will be a bit more difficult to hook up, but 
 the easy stuff out of the way.
 
 Starting with the color picker, we'll add a `@property` decorator. This is a reactive property, and is something
-we explored in Episode #1. This time however, we can use a simple decorator instead of the wordy syntax in a 
+we explored in Episode #1. This time however, we can use a simple decorator instead of the wordy syntax in a
 pure JS project.
 
 By hooking up the input event to the color picker, setting the current `color` attribute on each to this new `textColor`
@@ -121,9 +121,9 @@ To finish up this left side, let's just fire off an alert as a placeholder for t
 create this placeholder function that uses the `@click` listener on the "Record and Save GIF" button.
 
 Lastly, we'll get the pickers/comboboxes working on the right side. These control the "shader" and optional
-texture used for the shader. The menu items for the shader picker will be driven from the list of shaders found in `shaders.ts` 
+texture used for the shader. The menu items for the shader picker will be driven from the list of shaders found in `shaders.ts`
 while the textures will just be an array of images in our assets folder with the addition of a web cam and the option
-to not have a texture at all. 
+to not have a texture at all.
 
 Given that Shader Doodle is a bit abnormal of a component (I'll discuss why in the next step), we won't actually take action
 on loading the shader quite yet.
@@ -131,7 +131,7 @@ on loading the shader quite yet.
 But wait! Even after we've wired this up, the picker menu is having some issues displaying when clicking to open it up.
 We're back to the issue in Episode #1, where we get a `process not defined` error. Again, this is due to an overlay
 management library trying to query if we're using Node.js or in a browser. We fixed this with a hack before, but now lets
-fix it properly. 
+fix it properly.
 
 In our `web-dev-server.config.js`, we'll remove `true` from the `nodeResolve` object. This object is much like the `lit-css`
 plugin we're using, but `nodeResolve` is so important and central to how `@web/dev-server` works, it's a top level
@@ -150,7 +150,7 @@ We should also import PrismJS so it's default languages like JS can have some ni
 It might make more sense to set the language to HLSL (shader language), but it's a bit of a hassle to get
 working, and I've found that it looks virtually identical to JS in practice (at least as far as the color styling goes).
 
-Starting slowly by experimenting and adding shaders manually to our Shader Doodle HTML markup, we'll get a bit more 
+Starting slowly by experimenting and adding shaders manually to our Shader Doodle HTML markup, we'll get a bit more
 organized and use the separate `shaders.ts` file to hold and export a set of sample shaders. We'll do the same with
 the `lit-code` component. As a middle step, however, we'll store the entire shader script tag in a variable and use
 Lit's `unsafeHTML` to render it, just to show this particular escape hatch exists when we need it.
@@ -166,7 +166,7 @@ with all of our markup. For a real application this would be less than ideal - i
 up more granularly as smaller and less complicated components, but thats not what we'll be focusing on today,
 so I'm allowing this project to get a bit messy.
 
-We start by adding Spectrum Web Components to our package.json. For Episode 2, I'm using dark mode in Spectrum 
+We start by adding Spectrum Web Components to our package.json. For Episode 2, I'm using dark mode in Spectrum
 just because in Episode 1 we used light mode.
 
 The application will be divided into two sections on the left and right. On the left,
@@ -185,7 +185,7 @@ But of course, none of this is wired up!
 
 
 # Step 1: Project Setup
-We start our "Space Doodle" app with a bit of front-end tooling setup. For this project, we'll 
+We start our "Space Doodle" app with a bit of front-end tooling setup. For this project, we'll
 be using Typescript and delve into using some web-dev server plugins.
 
 To begin, we start with installing 3 packages
@@ -193,8 +193,8 @@ To begin, we start with installing 3 packages
 - @web-dev/server - Also used in Episode 1 and we'll be using it again to serve our dev environment
 - Typescript - Adds types to our JS variables and functions, but also is one way to use decorators in Lit
 
-Next, we'll set up some tasks in our package.json. New to use will be the Typescript compilation task, and
-the task to transpile and watch our TS files. The serve task that launches our page for development has 
+Next, we'll set up some tasks in our package.json. New to us will be the Typescript compilation task, and
+the task to transpile and watch our TS files. The serve task that launches our page for development has
 been covered in Episode 1 and adds TS transpilation to the mix. TS and serving are done with an ampersand
 (&) so they both execute in parallel. TS files will be watched and when changes happen will be transpiled to JS.
 And these JS files that were transpiled will force the page to be reloaded. We'll also need a simple `tsconfig.json`
@@ -207,10 +207,10 @@ We'll also add the `doodle-app` component/tag/element to our page body, and incl
 "Space Doodle" app entry point found at `src/doodle.js`
 
 In our application entrypoint, doodle.ts (which is Typescript), we'll create a mostly empty class. This class
-will be our `doodle-app` web component which uses Lit by extending it. Inside this class will be the 
+will be our `doodle-app` web component which uses Lit by extending it. Inside this class will be the
 Lit `render` call which renders nothing yet (by way of an empty html tagged template).
 
-To define the Web Component, we'll be using our first "decorator". 
+To define the Web Component, we'll be using our first "decorator".
 
 Next up, we'll demonstrate adding style to our component. Unlike Episode 1, we won't be using CSS in JS,
 or rather we won't LOOK like we are. We'll start by creating a `doodle.css` file and adding a simple `:host`
