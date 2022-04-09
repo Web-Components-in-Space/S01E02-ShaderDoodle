@@ -142,7 +142,7 @@ export class Doodle extends LitElement {
                                     'some video.mp4',    
                                 ].map(photo => {
                                     return html`<sp-menu-item value=${photo}>${photo}</sp-menu-item>`
-                                })}\`;
+                                })}
                             </sp-picker>
                         </div>
                         <div>
