@@ -4,7 +4,6 @@ import sourcemaps from 'rollup-plugin-sourcemaps';
 import clean from 'rollup-plugin-clean';
 import litcss from 'rollup-plugin-lit-css';
 import commonjs from '@rollup/plugin-commonjs';
-import nodepolyfill from 'rollup-plugin-node-polyfills';
 import { prepend } from 'rollup-plugin-insert'
 
 export default {
@@ -15,13 +14,14 @@ export default {
     },
     plugins: [
         clean(),
-        nodeResolve(),
+        nodeResolve({
+            exportConditions: ['production']
+        }),
         litcss(),
         prepend('var remaining, curPixel, n_bits; \n\n', { include: './node_modules/gifjs/src/LZWEncoder.js'}),
         commonjs( {
             include: ['./node_modules/gifjs/**/*.js']
         }),
-        nodepolyfill(),
         sourcemaps(),
         html()
     ],
